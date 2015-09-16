@@ -41,8 +41,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef _WIN32
+#else
 #include <sys/time.h>
-
+#endif
 #include "kmeans_kd.h"
 
 /* Choose k numbers at random from 0 to n-1 */
@@ -331,10 +333,12 @@ double kmeans(int n, int dim, int k, int restarts, unsigned char **v,
             fill_vector(means_curr + j * dim, v[starts[j]], dim);
         }
         
+#ifdef _WIN32
+#else
         /* Compute new assignments */
         timeval start, stop;
         gettimeofday(&start, NULL);
-
+#endif
         int changed = 0;
         changed = compute_clustering_kd_tree(n, dim, k, v, means_curr,
                                              clustering_curr, error);
@@ -342,17 +346,22 @@ double kmeans(int n, int dim, int k, int restarts, unsigned char **v,
         double changed_pct = (double) changed / n;
 
         do {
-            gettimeofday(&stop, NULL);
+#ifdef _WIN32
+#else
+					gettimeofday(&stop, NULL);
+					long seconds  = stop.tv_sec  - start.tv_sec;
+					long useconds = stop.tv_usec - start.tv_usec;
+					double etime = seconds + useconds * 0.000001;
 
-            long seconds  = stop.tv_sec  - start.tv_sec;
-            long useconds = stop.tv_usec - start.tv_usec;
-            double etime = seconds + useconds * 0.000001;    
+					printf("Round %d: changed: %d\n", i, changed);
+					printf("Round took %0.3lfs\n", etime);
+					fflush(stdout);
 
-            printf("Round %d: changed: %d\n", i, changed);
-            printf("Round took %0.3lfs\n", etime);            
-            fflush(stdout);
+					gettimeofday(&start, NULL);
+#endif
+            
 
-            gettimeofday(&start, NULL);
+          
 
             /* Recompute means */
             max_change = compute_means(n, dim, k, v, 

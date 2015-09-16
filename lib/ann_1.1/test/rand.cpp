@@ -444,7 +444,7 @@ void annClusOrthFlats(			// clustered along orthogonal flats
 	for (int c = 0; c < n_col; c++) {			// generate clusters
 		int pick = (n+c)/n_col;					// number of points to pick
 												// generate the points
-		genOrthFlat(pa+offset, pick, dim, control[c], std_dev);
+		genOrthFlat(pa+offset, pick, dim, (double*)control[c], std_dev);
 		offset += pick;							// increment offset
 	}
 }
@@ -551,7 +551,7 @@ void annClusEllipsoids(			// clustered around ellipsoids
 	for (int c = 0; c < n_col; c++) {			// generate clusters
 		int pick = (n+c)/n_col;					// number of points to pick
 												// generate the points
-		genGauss(pa+offset, pick, dim, centers[c], std_dev[c]);
+		genGauss(pa + offset, pick, dim, (double*)centers[c], (double*)std_dev[c]);
 		offset += pick;							// increment offset in array
 	}
 }

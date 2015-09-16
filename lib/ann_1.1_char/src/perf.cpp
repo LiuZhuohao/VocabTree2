@@ -68,7 +68,7 @@ ANNsampStat		ann_1_1_char::ann_rank_err;			// rank error
 //	Routines for statistics.
 //----------------------------------------------------------------------
 
-DLL_API void ann_1_1_char::annResetStats(int data_size) // reset stats for a set of queries
+DLL_API void annResetStats(int data_size) // reset stats for a set of queries
 {
 	ann_Ndata_pts  = data_size;
 	ann_visit_lfs.reset();
@@ -82,7 +82,7 @@ DLL_API void ann_1_1_char::annResetStats(int data_size) // reset stats for a set
 	ann_rank_err.reset();
 }
 
-DLL_API void ann_1_1_char::annResetCounts()				// reset counts for one query
+DLL_API void annResetCounts()				// reset counts for one query
 {
 	ann_Nvisit_lfs = 0;
 	ann_Nvisit_spl = 0;
@@ -92,7 +92,7 @@ DLL_API void ann_1_1_char::annResetCounts()				// reset counts for one query
 	ann_Nfloat_ops = 0;
 }
 
-DLL_API void ann_1_1_char::annUpdateStats()				// update stats with current counts
+DLL_API void annUpdateStats()				// update stats with current counts
 {
 	ann_visit_lfs += ann_Nvisit_lfs;
 	ann_visit_nds += ann_Nvisit_spl + ann_Nvisit_lfs;
@@ -104,7 +104,7 @@ DLL_API void ann_1_1_char::annUpdateStats()				// update stats with current coun
 }
 
 										// print a single statistic
-static void print_one_stat(char *title, ANNsampStat s, double div)
+void print_one_stat(char *title, ANNsampStat s, double div)
 {
 	cout << title << "= [ ";
 	cout.width(9); cout << s.mean()/div			<< " : ";
@@ -113,7 +113,7 @@ static void print_one_stat(char *title, ANNsampStat s, double div)
 	cout.width(9); cout << s.max()/div			<< " >\n";
 }
 
-DLL_API void ann_1_1_char::annPrintStats(				// print statistics for a run
+DLL_API void annPrintStats(				// print statistics for a run
 	ANNbool validate)					// true if average errors desired
 {
 	cout.precision(4);					// set floating precision

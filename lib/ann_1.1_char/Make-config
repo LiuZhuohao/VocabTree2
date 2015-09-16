@@ -70,9 +70,9 @@
 #					Linux using g++
 linux-g++:
 	$(MAKE) targets \
-	"ANNLIB = libANN_char.a" \
+	"ANNLIB = libANN.a" \
 	"C++ = g++" \
-	"CFLAGS = -O3 -mfpmath=sse -msse2 -funroll-loops --fast-math -march=core2" \
+	"CFLAGS = -O3" \
 	"MAKELIB = ar ruv" \
 	"RANLIB = true"
 

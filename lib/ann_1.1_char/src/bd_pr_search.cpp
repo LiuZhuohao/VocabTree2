@@ -34,34 +34,30 @@ using namespace ann_1_1_char;
 //		we include the extensions for shrinking nodes.
 //----------------------------------------------------------------------
 
-#ifdef ANN_PERF
-#undef ANN_PERF
-#endif
-
 //----------------------------------------------------------------------
 //	bd_shrink::ann_search - search a shrinking node
 //----------------------------------------------------------------------
 
-void ANNbd_shrink::ann_pri_search(ANNdist box_dist, ANNprTempStore &store)
+void ANNbd_shrink::ann_pri_search(ANNdist box_dist, PriSearchContext * ctx)
 {
 	ANNdist inner_dist = 0;						// distance to inner box
 	for (int i = 0; i < n_bnds; i++) {			// is query point in the box?
-		if (bnds[i].out(store.ANNprQ)) {				// outside this bounding side?
+		if (bnds[i].out(ctx->ANNprQ)) {				// outside this bounding side?
 												// add to inner distance
-			inner_dist = (ANNdist) ANN_SUM(inner_dist, bnds[i].dist(store.ANNprQ));
+			inner_dist = (ANNdist) ANN_SUM(inner_dist, bnds[i].dist(ctx->ANNprQ));
 		}
 	}
 	if (inner_dist <= box_dist) {				// if inner box is closer
 		if (child[ANN_OUT] != KD_TRIVIAL)		// enqueue outer if not trivial
-			store.ANNprBoxPQ->insert(box_dist,child[ANN_OUT]);
+			ctx->ANNprBoxPQ->insert(box_dist,child[ANN_OUT]);
 												// continue with inner child
-		child[ANN_IN]->ann_pri_search(inner_dist, store);
+		child[ANN_IN]->ann_pri_search(inner_dist, ctx);
 	}
 	else {										// if outer box is closer
 		if (child[ANN_IN] != KD_TRIVIAL)		// enqueue inner if not trivial
-			store.ANNprBoxPQ->insert(inner_dist,child[ANN_IN]);
+			ctx->ANNprBoxPQ->insert(inner_dist,child[ANN_IN]);
 												// continue with outer child
-		child[ANN_OUT]->ann_pri_search(box_dist, store);
+		child[ANN_OUT]->ann_pri_search(box_dist, ctx);
 	}
 	ANN_FLOP(3*n_bnds)							// increment floating ops
 	ANN_SHR(1)									// one more shrinking node

@@ -72,9 +72,13 @@ int compute_clustering_kd_tree(int n, int dim, int k, unsigned char **v,
     ANNkd_tree *tree = new ANNkd_tree(pts, k, dim, 4);
     annMaxPtsVisit(512);
 
-    const int max_threads = omp_get_max_threads();    
-    int changed[max_threads];
-    float *vec[max_threads];
+    const int max_threads = omp_get_max_threads(); 
+    //int changed[max_threads];
+    //float *vec[max_threads];
+		int *changed = new int[max_threads];
+		float **vec = new float*[max_threads];
+
+
 
     for (int i = 0; i < max_threads; i++) {
         changed[i] = 0;
